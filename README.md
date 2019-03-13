@@ -6,6 +6,9 @@ Some commonly used charts;一些常用的图表，自己实现的。
 - 但有些图表，echarts中没有或者不好实现
 - 但是产品JL需要其它图表，所以有了此库。
 
+## Example(网页示例)
+- [Demo](https://one-boy.github.io/charts/example/index.html)
+
 ## 已有图表
 - **活动占比图**
 
