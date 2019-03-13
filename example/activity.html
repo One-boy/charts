@@ -1,29 +1,30 @@
-# charts
-Some commonly used charts;一些常用的图表，自己实现的。
+<!DOCTYPE html>
+<html lang="en">
 
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>活动占比图</title>
+  <style>
+    #container {
+      width: 450px;
+      height: 450px;
+      border: 1px solid #ccc;
+      margin: 0 auto;
+    }
+  </style>
+  <script src="../build/charts.js"></script>
+</head>
 
-## 已有图表
-- **活动占比图**
-![image](screenshot/activity.gif)
+<body>
+  <h2>活动占比图示例</h2>
+  <div id="container"></div>
+</body>
 
-## 目录介绍
-- `./src`，存放源代码
-- `./build`，存放打包后的代码，可直接引入
-- `./example`，例子
+<script>
 
-## 编译方法
-- `npm run build`
-
-## 环境依赖
-- 无其它库依赖，需浏览器支持canvas
-
-## 图表使用方法
-- 1.引入build下的`charts.js`
-- 2.全局变量为`MyCharts`
-- 3.按照如下方法使用：
-#### 活动占比图使用示例：
-```js
- const data = [
+  const data = [
     { name: '跑步1公里', value: 85, baseValue: 100 },
     { name: '跑步5公里', value: 45, baseValue: 100 },
     { name: '跑步8公里', value: 25, baseValue: 100 },
@@ -75,8 +76,6 @@ Some commonly used charts;一些常用的图表，自己实现的。
 
   //启动轮播
   act.startCarousel(2000)
-```
+</script>
 
-## License
-
-- 完全开放自由，拿去用。
+</html>

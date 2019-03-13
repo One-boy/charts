@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>example</title>
+</head>
+
+<body>
+  <h2>图形示例列表</h2>
+  <ul id="list">
+
+  </ul>
+</body>
+
+<script>
+
+  let data = [
+    { name: '活动占比图', url: 'activity' },
+  ]
+
+  let listDom = document.getElementById('list')
+
+  let frag = document.createDocumentFragment()
+
+  data.forEach(d => {
+    let li = document.createElement('li')
+    let a = document.createElement('a')
+    a.href = `${d.url}.html`
+    a.innerText = d.name
+    li.appendChild(a)
+    frag.appendChild(li)
+  })
+
+  listDom.appendChild(frag)
+
+
+</script>
+
+</html>

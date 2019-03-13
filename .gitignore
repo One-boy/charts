@@ -1,0 +1,8 @@
+
+#忽略文件和目录
+
+node_modules
+
+.vscode
+
+package-lock.json
