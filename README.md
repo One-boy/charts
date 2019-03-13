@@ -1,9 +1,14 @@
 # charts
 Some commonly used charts;一些常用的图表，自己实现的。
 
+## 背景
+- 项目中经常会使用echarts，这里感谢`echarts`如此好的图表库
+- 但有些图表，echarts中没有或者不好实现
+- 但是产品JL需要其它图表，所以有了此库。
 
 ## 已有图表
 - **活动占比图**
+
 ![image](screenshot/activity.gif)
 
 ## 目录介绍
