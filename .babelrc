@@ -1,1 +1,13 @@
-{}
+{
+  "presets": [
+    [
+      "@babel/preset-env",
+      {
+        "targets": {
+          "chrome": 20
+        }
+      }
+    ]
+  ],
+  "plugins": []
+}
