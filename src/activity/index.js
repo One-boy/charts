@@ -2,7 +2,7 @@
  * @Author: hy
  * @Date: 2019-03-11 17:21:58
  * @Last Modified by: hy
- * @Last Modified time: 2019-03-21 13:36:26
+ * @Last Modified time: 2019-03-21 14:12:17
  */
 
 
@@ -260,10 +260,14 @@ class Activity {
         // start: this.startAngle, // 起始值
         // end: item.endAngle, // 结束值
         start: [this.startAngle, (item.circleWidth || this.circleWidth)], // 起始值
-        end: [item.endAngle, (item.circleWidth || this.circleWidth) + this.addWidth], // 结束值
+        end: [item.oldEndAngle ? item.oldEndAngle : item.endAngle, (item.circleWidth || this.circleWidth) + this.addWidth], // 结束值
         life: this.animationTime, // 生命周期，毫秒
         easing: this.easingName,  // 缓动函数名
       })
+      //保存老的endAngle
+      if (!item.oldEndAngle) {
+        item.oldEndAngle = item.endAngle
+      }
       animator.onframe = (end, value) => {
         item.endAngle = value[0]
         item.percent = this.angleToPercent(value[0])
