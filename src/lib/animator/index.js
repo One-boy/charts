@@ -2,11 +2,10 @@
  * @Author: hy
  * @Date: 2019-03-11 17:24:07
  * @Last Modified by: hy
- * @Last Modified time: 2019-03-13 11:49:39
+ * @Last Modified time: 2019-03-21 13:39:32
  */
 
 // 动画执行器
-// 参考的zrender
 
 import Easing from '../easing'
 
@@ -45,26 +44,34 @@ class Animator {
     const currentTime = new Date().getTime()
     const execTime = (currentTime - this._startTime) / this._life
     const percent = Math.min(execTime, 1)
-
     if (percent === 1) {
       // 生命周期执行完毕
       this._running = false
     }
-
     // 让percent通过缓动函数执行
     const newPercent = Easing[this._easing](percent)
-
     // 根据返回的百分比值，计算走了多少
-    this._current = (this._end - this._start) * newPercent
-    if (this._start < 0) {
-      this._current -= Math.abs(this._start)
+    if (Array.isArray(this._start)) {
+      this._current = []
+
+      this._start.forEach((s, index) => {
+        this._current[index] = (this._end[index] - s) * newPercent
+        if (s < 0) {
+          this._current[index] -= Math.abs(s)
+        }
+        if (this._end[index] - s < 0.001) {
+          this._current[index] = this._end[index]
+        }
+      })
+    } else {
+      this._current = (this._end - this._start) * newPercent
+      if (this._start < 0) {
+        this._current -= Math.abs(this._start)
+      }
+      if (this._end - this._start < 0.001) {
+        this._current = this._end
+      }
     }
-    if (this._end - this._start < 0.001) {
-      this._current = this._end
-    }
-    // if (this._current < Math.abs(this._start)) {
-    //   this._current -= Math.abs(this._start)
-    // }
 
     // 通知
     this._fire('frame', this._current)

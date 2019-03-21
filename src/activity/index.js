@@ -1,9 +1,10 @@
 /*
  * @Author: hy
- * @Date: 2019-03-13 11:21:58
+ * @Date: 2019-03-11 17:21:58
  * @Last Modified by: hy
- * @Last Modified time: 2019-03-13 15:19:44
+ * @Last Modified time: 2019-03-21 13:36:26
  */
+
 
 // 活动图的实现
 
@@ -90,7 +91,8 @@ class Activity {
       arcGap = 12,  // 环间隙
       innerRadius = 50,  // 内环半径
       width = 32,         // 环的宽度
-      bottomColor = '#eee' // 圆环底色
+      bottomColor = '#eee', // 圆环底色
+      animationTime = 1000, // 动画运行时间
     } = options.itemStyle
 
     this.lineCap = lineCap
@@ -98,6 +100,9 @@ class Activity {
     this.innerRadius = innerRadius
     this.circleWidth = width
     this.bottomColor = bottomColor
+    this.animationTime = animationTime
+
+    this.addWidth = Math.floor(this.arcGap / 2)
 
     // 颜色映射
     this.visualMap = options.visualMap
@@ -252,28 +257,29 @@ class Activity {
       }
 
       const animator = new Animator({
-        start: this.startAngle, // 起始值
-        end: item.endAngle, // 结束值
+        // start: this.startAngle, // 起始值
+        // end: item.endAngle, // 结束值
+        start: [this.startAngle, (item.circleWidth || this.circleWidth)], // 起始值
+        end: [item.endAngle, (item.circleWidth || this.circleWidth) + this.addWidth], // 结束值
         life: this.animationTime, // 生命周期，毫秒
         easing: this.easingName,  // 缓动函数名
       })
-
       animator.onframe = (end, value) => {
-        item.endAngle = value
-        item.percent = this.angleToPercent(value)
-        this.drawAll()
+        item.endAngle = value[0]
+        item.percent = this.angleToPercent(value[0])
+        this.drawAll(value[1])
       }
       animator.start()
     })
   }
 
   // 画所有
-  drawAll() {
+  drawAll(width) {
     this.clear()
     this.data.forEach((d, index) => {
       let addWidth = 0
       if (!this.isPauseCarousel && index === this.carouselIndex) {
-        addWidth = this.addWidth
+        addWidth = width
       }
       this.drawArc({
         lineWidth: (d.circleWidth || this.circleWidth) + addWidth,
@@ -282,7 +288,7 @@ class Activity {
         startAngle: 0,
         endAngle: this.angleToRadian(360),
         lineCap: this.lineCap,
-        color: this.bottomColor
+        color: this.bottomColor,
       })
       this.drawArc({
         lineWidth: (d.circleWidth || this.circleWidth) + addWidth,
@@ -291,7 +297,7 @@ class Activity {
         startAngle: this.angleToRadian(this.startAngle),
         endAngle: this.angleToRadian(d.endAngle),
         lineCap: this.lineCap,
-        color: d.color
+        color: d.color,
       })
       if (d.showText) {
         this.showText(d)
@@ -405,7 +411,7 @@ class Activity {
       this.drawArcs(true)
 
       this.startCarousel(time)
-    }, time)
+    }, time + this.animationTime)
   }
 
   // 暂停轮播
@@ -438,9 +444,7 @@ class Activity {
     }
 
     // 如果宽高变化，则缩放
-    if (this.ctx.canvas.width !== boundingRect.width * devicePixelRatio
-      || this.ctx.canvas.height !== boundingRect.height * devicePixelRatio) {
-
+    if (this.ctx.canvas.width !== boundingRect.width * devicePixelRatio || this.ctx.canvas.height !== boundingRect.height * devicePixelRatio) {
       this.ctx.canvas.style.width = `${boundingRect.width}px`
       this.ctx.canvas.style.height = `${boundingRect.height}px`
 
