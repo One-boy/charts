@@ -57,6 +57,7 @@
       width: 26,  //环的宽度
       bottomColor: '#ccc',  //环底色
       animationTime: 1000, //动画运行时间
+      startAngle: -90,//绘画开始角度
     },
     //颜色映射,和data的value作比对
     visualMap: [
@@ -76,7 +77,7 @@
   act.setOption(options)
 
   //启动轮播
-  act.startCarousel(1000)
+  act.startCarousel(500)
 </script>
 
 </html>

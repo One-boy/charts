@@ -2,7 +2,7 @@
  * @Author: hy
  * @Date: 2019-03-11 17:21:58
  * @Last Modified by: hy
- * @Last Modified time: 2019-03-21 14:12:17
+ * @Last Modified time: 2019-03-22 10:33:12
  */
 
 
@@ -49,6 +49,9 @@ class Activity {
     // 起始角度
     this.startAngle = 0
 
+    //环开始画的起始弧度位置
+    this.startRadian = 0
+
     // 动画运行时间(毫秒)
     this.animationTime = 1000
 
@@ -93,6 +96,7 @@ class Activity {
       width = 32,         // 环的宽度
       bottomColor = '#eee', // 圆环底色
       animationTime = 1000, // 动画运行时间
+      startAngle = 0,//起始绘画角度
     } = options.itemStyle
 
     this.lineCap = lineCap
@@ -101,6 +105,7 @@ class Activity {
     this.circleWidth = width
     this.bottomColor = bottomColor
     this.animationTime = animationTime
+    this.startRadian = this.angleToRadian(startAngle)
 
     this.addWidth = Math.floor(this.arcGap / 2)
 
@@ -161,16 +166,7 @@ class Activity {
   // 鼠标移动
   mouseMove(e) {
     this.data.forEach(d => {
-      const isIn = this.containInArcLine(
-        { x: e.offsetX, y: e.offsetY },
-        {
-          centerPoint: this.centerPoint,
-          r: d.r,
-          lineWidth: this.circleWidth,
-          startAngle: this.startAngle,
-          endAngle: this.angleToRadian(d.endAngle),
-        }
-      )
+      const isIn = this.isInCircle(d, e.offsetX, e.offsetY)
 
       if (isIn && !d.circleWidth) {
         d.circleWidth = this.circleWidth + (this.arcGap / 2)
@@ -184,6 +180,23 @@ class Activity {
         this.drawArcs(false)
       }
     })
+  }
+
+  //判断一个点是否在圆环上
+  isInCircle(data, x, y) {
+    let canvas = document.createElement('canvas')
+    canvas.width = this.width
+    canvas.height = this.height
+    let ctx = canvas.getContext('2d')
+
+    ctx.beginPath()
+    ctx.lineWidth = data.circleWidth || this.circleWidth
+    ctx.lineCap = this.lineCap
+    ctx.translate(this.centerPoint.x, this.centerPoint.y)
+    ctx.rotate(this.startRadian)
+    ctx.arc(0, 0, data.r, this.angleToRadian(this.startAngle), this.angleToRadian(data.endAngle), false)
+    ctx.stroke()
+    return ctx.isPointInStroke(x, y)
   }
 
 
@@ -309,47 +322,6 @@ class Activity {
     })
   }
 
-  // 计算一个点是否在圆弧线上
-  // 目前只计算顺时针
-  containInArcLine(
-    point,
-    arcObj
-  ) {
-    const { centerPoint, r, lineWidth, startAngle, endAngle } = arcObj
-    let { x, y } = point
-
-    x -= centerPoint.x
-    y -= centerPoint.y
-
-    if (lineWidth === 0) {
-      return false
-    }
-
-    // 点到圆心的距离判断是否在圆弧上
-    const distance = Math.sqrt(x * x + y * y)
-    if (distance < (r - lineWidth / 2) || distance > (r + lineWidth / 2)) {
-      return false
-    }
-
-    // 完整的圆，起始弧度加上结束弧度，余上 2PI，小于0.0001就好，等于0有bug
-    const PI2 = Math.PI * 2
-    if (Math.abs(startAngle - endAngle) % PI2 < 1e-4) {
-      return true
-    }
-
-    // 判断是不是在起始弧度和结束弧度之间的圆弧上
-    let angle = Math.atan2(y, x)  // 计算点和圆心构成的弧度
-    if (angle < 0) {
-      angle += PI2
-    }
-    if (angle >= startAngle && angle <= endAngle) {
-      return true
-    }
-
-    return false
-
-  }
-
   // 清除画布
   clear() {
     this.ctx.clearRect(0, 0, this.width, this.height)
@@ -363,6 +335,7 @@ class Activity {
     this.ctx.lineWidth = lineWidth
     this.ctx.lineCap = lineCap
     this.ctx.translate(centerPoint.x, centerPoint.y)
+    this.ctx.rotate(this.startRadian)
     this.ctx.arc(0, 0, r, startAngle, endAngle, false)
     this.ctx.strokeStyle = color
     this.ctx.stroke()
