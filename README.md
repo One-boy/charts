@@ -4,7 +4,7 @@ Some commonly used charts;一些常用的图表，自己实现的。
 ## 背景
 - 项目中经常会使用echarts，这里感谢`echarts`如此好的图表库
 - 但有些图表，echarts中没有或者不好实现
-- 但是产品JL需要其它图表，所以有了此库。
+- 但是也时常需要其它图表，所以有了此库。
 
 ## Example(网页示例)
 - [Demo](https://one-boy.github.io/charts/example/index.html)
@@ -13,6 +13,10 @@ Some commonly used charts;一些常用的图表，自己实现的。
 - **活动占比图**
 
 ![image](screenshot/activity.gif)
+
+- **水球占比图**
+
+![image](screenshot/water.gif)
 
 ## 目录介绍
 - `./src`，存放源代码
@@ -30,8 +34,10 @@ Some commonly used charts;一些常用的图表，自己实现的。
 - 2.全局变量为`MyCharts`
 - 3.按照如下方法使用：
 #### 活动占比图使用示例：
-```js
- const data = [
+<details>
+<summary>点击查看</summary>
+<pre>
+const data = [
     { name: '跑步1公里', value: 85, baseValue: 100 },
     { name: '跑步5公里', value: 45, baseValue: 100 },
     { name: '跑步8公里', value: 25, baseValue: 100 },
@@ -83,8 +89,64 @@ Some commonly used charts;一些常用的图表，自己实现的。
 
   //启动轮播
   act.startCarousel(2000)
-```
+</pre>
+</details>
+
+
+#### 水球占比图示例
+<details>
+<summary>点击查看</summary>
+<pre>
+  // 数据
+  const WATER_DATA = {
+    value: 50,
+  }
+
+
+  // 活动图的配置
+  const options = {
+    //活动图的数据
+    data: WATER_DATA,
+    // 文本样式
+    textStyle: {
+      font: 'sans-serif',
+      fontSize: 32,
+      color: 'white',
+      fontWeight: 'bold',
+      formatter: '{value}%',
+      globalCompositeOperation: 'xor',
+    },
+    // 其它项目样式
+    itemStyle: {
+      // 动画时间
+      animationTime: 3000,
+      // 波浪相关样式
+      wave: {
+        color: 'rgb(255,255,255)',  // 颜色
+        waterCycle: 150, // 单波宽
+        waterHeight: 6, // 波高
+        waveOffsetRange: 0.1, // 频率
+      },
+      // 内环样式
+      innerCircle: {
+        width: 8,
+        color: 'red',
+        radius: 180, // 半径
+      },
+      // 外环样式
+      outterCircle: {
+        width: 12,
+        color: 'blue',
+        radius: 210,
+      },
+    }
+  }
+
+  const arc = new MyCharts.WaterWave('box')
+  arc.setOption(options)
+</pre>
+</details>
 
 ## License
 
-- 完全开放自由，拿去用。
+- MIT

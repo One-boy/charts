@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+
+<body>
+  <div class="container">
+    <div id="box"></div>
+  </div>
+
+</body>
+<script src="../build/charts.js"></script>
+<style>
+  #arc {
+    border: 1px solid black;
+  }
+
+  .container {
+    width: 1000px;
+    height: 900px;
+    padding: 100px;
+    border: 1px solid black;
+  }
+
+  #box {
+    height: 100%;
+    border: 1px solid #bbb;
+    background: #3c3c3c;
+  }
+</style>
+
+<script>
+
+  // 数据
+  const WATER_DATA = {
+    value: 50,
+  }
+
+
+  // 活动图的配置
+  const options = {
+    //活动图的数据
+    data: WATER_DATA,
+    // 文本样式
+    textStyle: {
+      font: 'sans-serif',
+      fontSize: 32,
+      color: 'white',
+      fontWeight: 'bold',
+      formatter: '{value}%',
+      globalCompositeOperation: 'xor',
+    },
+    // 其它项目样式
+    itemStyle: {
+      // 动画时间
+      animationTime: 3000,
+      // 波浪相关样式
+      wave: {
+        color: 'rgb(255,255,255)',  // 颜色
+        waterCycle: 150, // 单波宽
+        waterHeight: 6, // 波高
+        waveOffsetRange: 0.1, // 频率
+      },
+      // 内环样式
+      innerCircle: {
+        width: 8,
+        color: 'red',
+        radius: 180, // 半径
+      },
+      // 外环样式
+      outterCircle: {
+        width: 12,
+        color: 'blue',
+        radius: 210,
+      },
+    }
+  }
+
+  const arc = new MyCharts.WaterWave('box')
+  arc.setOption(options)
+</script>
+
+</html>
