@@ -2,7 +2,7 @@
  * @Author: hy
  * @Date: 2019-03-11 17:24:07
  * @Last Modified by: hy
- * @Last Modified time: 2019-03-21 13:39:32
+ * @Last Modified time: 2019-04-12 16:48:03
  */
 
 // 动画执行器
@@ -14,15 +14,20 @@ class Animator {
     start = 0, // 起始值
     end = 1000, // 结束值
     life = 1000, // 生命周期，毫秒
-    easing = 'linear'  // 缓动函数
+    easing = 'linear',  // 缓动函数
   }) {
-
     this._life = life
     this._end = end
     this._start = start
     this._running = true // 是否运行
     this._current = this._start // 当前运行到的值
     this._easing = easing
+
+    if (Array.isArray(this._start)) {
+      this._diffValue = this._start.map((s, i) => this._end[i] - s)
+    } else {
+      this._diffValue = this._end - this._start
+    }
   }
 
   // 开始动画
@@ -55,20 +60,14 @@ class Animator {
       this._current = []
 
       this._start.forEach((s, index) => {
-        this._current[index] = (this._end[index] - s) * newPercent
-        if (s < 0) {
-          this._current[index] -= Math.abs(s)
-        }
-        if (this._end[index] - s < 0.001) {
+        this._current[index] = (this._diffValue[index] * newPercent) + s
+        if (this._diffValue[index] < 0.001 && this._diffValue[index] > -0.001) {
           this._current[index] = this._end[index]
         }
       })
     } else {
-      this._current = (this._end - this._start) * newPercent
-      if (this._start < 0) {
-        this._current -= Math.abs(this._start)
-      }
-      if (this._end - this._start < 0.001) {
+      this._current = (this._diffValue * newPercent) + this._start
+      if (this._diffValue < 0.001 && this._diffValue > -0.001) {
         this._current = this._end
       }
     }
